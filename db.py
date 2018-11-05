@@ -17,16 +17,6 @@ def executemany(str, data):
         print('Sql err: ' ,e)
         conn.rollback()
 
-def execute(str, data):
-    try:
-        cursor.execute(str, data)
-        # 使用 fetchone() 方法获取单条数据.
-        # data = cursor.fetchone()
-        conn.commit()
-    except Exception as e:
-        print('Execute sql err: ', e)
-        conn.rollback()
-
 def select(str):
     try:
         cursor.execute(str)
@@ -38,3 +28,16 @@ def closeconn():
     cursor.close()
      # close conn
     conn.close()
+
+def execute(str):
+    try:
+        # 执行SQL语句
+        cursor.execute(str)
+        # 提交到数据库执行
+        conn.commit()
+    except Exception as e:
+        # 发生错误时回滚
+        conn.rollback()
+        print('Execute sql err: ', e)
+
+    
