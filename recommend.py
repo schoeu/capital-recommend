@@ -24,13 +24,9 @@ def savetags(data, rowkeys):
     sql = "UPDATE article_contents SET tags = CASE {rowdata} END WHERE row_key IN ({rowkeystr})".format(rowdata=data, rowkeystr=','.join(rowkeys))
     db.execute(sql)
 
-# main
-def main():
+def recomm():
     # get contents which analyzed be zero.
     getcontents()
 
     # finally part.
     db.closeconn()
-
-if __name__ == '__main__':
-    main()

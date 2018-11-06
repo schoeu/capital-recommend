@@ -18,3 +18,17 @@ def gettags(data):
     allowpos = tuple(config['allowpos'])
     tags = jieba.analyse.extract_tags(data, topK=config['topkey'], withWeight=True, allowPOS=allowpos)
     return tags
+
+def returnjson(data = ''):
+    return json.dumps({
+        'status': 0,
+        'msg': 'ok',
+        'data': data
+    })
+
+def returnerror(msg='api error.'):
+    return json.dumps({
+        'status': 1,
+        'msg': msg,
+        'data': None
+    })
