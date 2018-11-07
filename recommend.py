@@ -27,6 +27,3 @@ def savetags(rs):
 def recomm():
     # get contents which analyzed be zero.
     getcontents()
-
-    # finally part.
-    db.closeconn()

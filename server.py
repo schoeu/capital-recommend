@@ -2,6 +2,7 @@ from flask import Flask, request
 import conf
 import recommend
 import utils
+import db
 
 config = conf.getconfig()
 
@@ -23,3 +24,6 @@ def checksecretkey():
         return utils.returnerror('API Forbidden.'), 403
     
 app.run(host=config['host'], port=config['port'])
+
+# finally part.
+db.closeconn()
