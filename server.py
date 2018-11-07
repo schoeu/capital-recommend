@@ -3,6 +3,7 @@ import conf
 import recommend
 import utils
 import db
+import json
 
 config = conf.getconfig()
 
@@ -19,12 +20,29 @@ def tags():
 
 @app.route("/api/sigletags")
 def sigletags():
-    secretkey = request.args.get('secretkey')
     rowkey = request.args.get('rowkey')
-    if secretkey != config['secretkey'] or not rowkey:
+    if not rowkey:
         return utils.returnerror('api error.')
     recommend.getsigletag(rowkey)
     return utils.returnjson('ok.')
+
+@app.route("/api/usertags")
+def usertags():
+    rowkey = request.args.get('rowkey')
+    uid = request.args.get('uid')
+    if uid and rowkey:
+        articletag = recommend.getarticletag(rowkey)
+        usertag = recommend.getusertag(uid)
+
+        atag = dict(articletag)
+        utag = dict(usertag)
+        alltags = recommend.getalltags(atag, utag)
+        
+        print(alltags)
+        recommend.saveusertag(uid, json.dumps(alltags, ensure_ascii=False))
+        return utils.returnjson('Update user tags complete.')
+    else:
+        return utils.returnerror('Need uid and rowkey params.')
     
 
 @app.before_request

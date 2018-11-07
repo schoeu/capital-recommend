@@ -34,3 +34,49 @@ def savetags(rs):
 def recomm():
     # get contents which analyzed be zero.
     getcontents()
+
+def getarticletag(rowkey):
+    sql = "SELECT tags FROM article_contents where row_key = '{}' limit 1".format(rowkey)
+    print(sql)
+    cursor = db.select(sql)
+    rs = cursor.fetchone()
+    if rs[0]:
+        jsonrs = json.loads(rs[0])
+        return jsonrs
+    else:
+        return []
+
+def getusertag(uid):
+    sql = "SELECT tags FROM users where open_id = '{}' limit 1".format(uid)
+    print(sql)
+    cursor = db.select(sql)
+    rs = cursor.fetchone()
+    try:
+        jsonrs = json.loads(rs[0])
+    except:
+        return []
+    else:
+        return jsonrs
+
+def getalltags(atag, utag):
+    tmp = {}
+    alltags = {}
+    atagcopy = atag.copy()
+    utagcopy = utag.copy()
+    for k in atag:
+        for key in utag:
+            if k == key:
+                num = atag[k] + utag[key]
+                tmp[k] = num
+                del atagcopy[k]
+                del utagcopy[key]
+    
+    alltags.update(atagcopy)
+    alltags.update(utagcopy)
+    alltags.update(tmp)
+    return alltags
+
+def saveusertag(uid, rs):
+    sql = "UPDATE users set tags = '{1}' where open_id = '{0}'".format(uid, rs)
+    print('saveusertag', sql)
+    db.execute(sql)
