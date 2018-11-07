@@ -13,7 +13,7 @@ def hello():
 
 @app.route("/api/tags")
 def tags():
-    #recommend.recomm()
+    recommend.recomm()
     return utils.returnjson('Update tags complete.')
 
 @app.before_request
