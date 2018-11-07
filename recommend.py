@@ -11,6 +11,13 @@ def getcontents():
     rs = cursor.fetchall()
     savetags(rs)
 
+def getsigletag(rowkey):
+    sql = 'SELECT topic, content, row_key FROM article_contents where row_key = {rowkey} and tags IS NULL limit 1'.format(rowkey=rowkey)
+    cursor = db.select(sql)
+    rs = cursor.fetchall()
+    if len(rs) > 0:
+        savetags(rs)
+
 def savetags(rs):
     rowdata = ''
     rowkeys = []

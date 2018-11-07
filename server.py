@@ -17,6 +17,16 @@ def tags():
     recommend.recomm()
     return utils.returnjson('Update tags complete.')
 
+@app.route("/api/sigletags")
+def sigletags():
+    secretkey = request.args.get('secretkey')
+    rowkey = request.args.get('rowkey')
+    if secretkey != config['secretkey'] or not rowkey:
+        return utils.returnerror('api error.')
+    recommend.getsigletag(rowkey)
+    return utils.returnjson('ok.')
+    
+
 @app.before_request
 def checksecretkey():
     secretkey = request.args.get('secretkey')
