@@ -38,7 +38,6 @@ def usertags():
         utag = dict(usertag)
         alltags = recommend.getalltags(atag, utag)
         
-        print(alltags)
         recommend.saveusertag(uid, json.dumps(alltags, ensure_ascii=False))
         return utils.returnjson('Update user tags complete.')
     else:

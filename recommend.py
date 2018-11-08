@@ -26,7 +26,6 @@ def savetags(rs):
         tags = utils.gettags(title + content)
         rowdata += " WHEN row_key='" + i[2] + "' THEN '" + json.dumps(tags, ensure_ascii=False).replace("'","\'") + "'"
         rowkeys.append("'{key}'".format(key=i[2]))
-        print(i[2], i[0])
     if len(rowkeys) > 0:
         sql = "UPDATE article_contents SET tags = CASE {rowdata} END WHERE row_key IN ({rowkeystr})".format(rowdata=rowdata, rowkeystr=','.join(rowkeys))
         db.execute(sql)
@@ -37,7 +36,6 @@ def recomm():
 
 def getarticletag(rowkey):
     sql = "SELECT tags FROM article_contents where row_key = '{}' limit 1".format(rowkey)
-    print(sql)
     cursor = db.select(sql)
     rs = cursor.fetchone()
     if rs[0]:
@@ -48,7 +46,6 @@ def getarticletag(rowkey):
 
 def getusertag(uid):
     sql = "SELECT tags FROM users where open_id = '{}' limit 1".format(uid)
-    print(sql)
     cursor = db.select(sql)
     rs = cursor.fetchone()
     try:
@@ -78,5 +75,4 @@ def getalltags(atag, utag):
 
 def saveusertag(uid, rs):
     sql = "UPDATE users set tags = '{1}' where open_id = '{0}'".format(uid, rs)
-    print('saveusertag', sql)
     db.execute(sql)
