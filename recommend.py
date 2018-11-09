@@ -8,15 +8,13 @@ config = conf.getconfig()
 
 def getcontents():
     sql = 'SELECT topic, content, row_key FROM article_contents where tags IS NULL order by date desc limit {limit}'.format(limit=config['limit'])
-    cursor = db.select(sql)
-    rs = cursor.fetchall()
+    rs = db.selectall(sql)
     savetags(rs)
 
 def getsigletag(rowkey):
     sql = 'SELECT topic, content, row_key FROM article_contents where row_key = {rowkey} and tags IS NULL limit 1'.format(rowkey=rowkey)
-    cursor = db.select(sql)
-    rs = cursor.fetchall()
-    if len(rs) > 0:
+    rs = db.selectall(sql)
+    if rs:
         savetags(rs)
 
 def savetags(rs):
@@ -38,18 +36,16 @@ def recomm():
 
 def getarticletag(rowkey):
     sql = "SELECT tags FROM article_contents where row_key = '{}' limit 1".format(rowkey)
-    cursor = db.select(sql)
-    rs = cursor.fetchone()
-    if rs:
-        jsonrs = json.loads(rs)
+    rs = db.selectone(sql)
+    if len(rs) > 0:
+        jsonrs = json.loads(rs[0])
         return jsonrs
     else:
         return []
 
 def getusertag(uid):
     sql = "SELECT tags FROM users where open_id = '{}' limit 1".format(uid)
-    cursor = db.select(sql)
-    rs = cursor.fetchone()
+    rs = db.selectone(sql)
     try:
         jsonrs = json.loads(rs[0])
     except:
@@ -81,12 +77,11 @@ def saveusertag(uid, rs):
 
 def getnewertags(uid):
     sql = 'SELECT row_key, tags FROM article_contents WHERE tags IS NOT NULL ORDER BY date desc limit {limit}'.format(limit=config['limit'])
-    cursor = db.select(sql)
-    rs = cursor.fetchall()
+    rs = db.selectall(sql)
 
     usertags = getusertag(uid)
     newusers = fixnums(usertags)
-    
+
     ctt = []
     if len(rs) > 0 and usertags:
         for i in rs:
