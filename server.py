@@ -26,6 +26,14 @@ def sigletags():
     recommend.getsigletag(rowkey)
     return utils.returnjson('ok.')
 
+@app.route("/api/addnewrecomm")
+def newrecomm():
+    uid = request.args.get('uid')
+    if not uid:
+        return utils.returnerror('api error.')
+    rs = recommend.getnewertags(uid)
+    return utils.returnjson(rs)
+
 @app.route("/api/usertags")
 def usertags():
     rowkey = request.args.get('rowkey')
