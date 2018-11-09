@@ -23,6 +23,7 @@ def savetags(rs):
     rowkeys = []
     for i in rs:
         title, content = utils.getalltext(i)
+        print(title, content)
         tags = utils.gettags(title + content)
         rowdata += " WHEN row_key='" + i[2] + "' THEN '" + json.dumps(tags, ensure_ascii=False).replace("'","\'") + "'"
         rowkeys.append("'{key}'".format(key=i[2]))
