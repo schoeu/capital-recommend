@@ -40,8 +40,8 @@ def getarticletag(rowkey):
     sql = "SELECT tags FROM article_contents where row_key = '{}' limit 1".format(rowkey)
     cursor = db.select(sql)
     rs = cursor.fetchone()
-    if rs[0]:
-        jsonrs = json.loads(rs[0])
+    if rs:
+        jsonrs = json.loads(rs)
         return jsonrs
     else:
         return []
