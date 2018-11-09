@@ -12,7 +12,7 @@ def getcontents():
     savetags(rs)
 
 def getsigletag(rowkey):
-    sql = 'SELECT topic, content, row_key FROM article_contents where row_key = {rowkey} and tags IS NULL limit 1'.format(rowkey=rowkey)
+    sql = "SELECT topic, content, row_key FROM article_contents where row_key = '{rowkey}' and tags IS NULL limit 1".format(rowkey=rowkey)
     rs = db.selectall(sql)
     if rs:
         savetags(rs)
@@ -37,7 +37,7 @@ def recomm():
 def getarticletag(rowkey):
     sql = "SELECT tags FROM article_contents where row_key = '{}' limit 1".format(rowkey)
     rs = db.selectone(sql)
-    if len(rs) > 0:
+    if rs:
         jsonrs = json.loads(rs[0])
         return jsonrs
     else:
@@ -83,7 +83,7 @@ def getnewertags(uid):
     newusers = fixnums(usertags)
 
     ctt = []
-    if len(rs) > 0 and usertags:
+    if rs and usertags:
         for i in rs:
             utags = i[1]
             if utags:
@@ -94,7 +94,7 @@ def getnewertags(uid):
                 newntags = fixnums(newctt)
                 rec = similar_pearson(newusers, newntags)
                 if rec > 0 and rec != 1:
-                    ctt.append([rec, i[0]])
+                    ctt.append([str(rec), i[0]])
     ctt.sort(key=lambda k: k[0], reverse=True)
     return ctt
 

@@ -22,11 +22,9 @@ pool = PooledDB(
     database = dbinfo['dbname'],
     charset = 'utf8'
 )
-conn = pool.connection()
-cursor = conn.cursor()
 
 def executemany(str, data):
-    getconn()
+    conn, cursor = getconn()
     # cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
     try:
         cursor.executemany(str, data)
@@ -35,45 +33,38 @@ def executemany(str, data):
     except Exception as e:
         print('executemany err: ' ,e)
         conn.rollback()
-    closeconn()
-
-def select(str):
-    getconn()
-    try:
-        cursor.execute(str)
-    except Exception as e:
-        print('select sql err: ', e)
-    return cursor
+    closeconn(conn, cursor)
 
 def selectall(str):
-    getconn()
+    conn, cursor = getconn()
     try:
         cursor.execute(str)
         r = cursor.fetchall()
         return r
     except Exception as e:
+        print('err sql-> ', str)
         print('selectall sql err: ', e)
-    closeconn()
+    closeconn(conn, cursor)
    
 
 def selectone(str):
-    getconn()
+    conn, cursor = getconn()
     try:
         cursor.execute(str)
         r = cursor.fetchone()
         return r
     except Exception as e:
+        print('err sql-> ', str)
         print('selectone sql err: ', e)
-    closeconn()
+    closeconn(conn, cursor)
 
-def closeconn():
-    global cursor, conn
+def closeconn(conn, cursor):
     cursor.close()
     # close conn
     conn.close()
 
 def execute(str):
-    getconn()
+    conn, cursor = getconn()
     try:
         # 执行SQL语句
         cursor.execute(str)
@@ -83,12 +74,13 @@ def execute(str):
         # 发生错误时回滚
         conn.rollback()
         print('Execute sql err: ', e)
-    closeconn()
+    closeconn(conn, cursor)
 
 def getconn():
-    global cursor, conn
     conn = pool.connection()
     cursor = conn.cursor()
+    return conn, cursor
+
 
 
 
