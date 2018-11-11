@@ -80,17 +80,15 @@ def getnewertags(uid):
     rs = db.selectall(sql)
 
     usertags = getusertag(uid)
-    newusers = fixnums(usertags)
+    newusers = fixnums(transtruct(usertags))
 
     ctt = []
     if rs and usertags:
         for i in rs:
             utags = i[1]
             if utags:
-                newctt = {}
                 tagstruct = json.loads(utags)
-                for j in tagstruct:
-                    newctt[j[0]] = j[1]
+                newctt = transtruct(tagstruct)
                 newntags = fixnums(newctt)
                 rec = similar_pearson(newusers, newntags)
                 if rec > 0 and rec != 1:
@@ -141,3 +139,9 @@ def fixnums(rs):
     for i in rs:
         ctt[i] = rs[i] * 100
     return ctt
+
+def transtruct(rs):
+    newctt = {}
+    for j in rs:
+        newctt[j[0]] = j[1]
+    return newctt
