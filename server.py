@@ -45,8 +45,8 @@ def usertags():
         atag = dict(articletag)
         utag = dict(usertag)
         alltags = recommend.getalltags(atag, utag)
-        
-        recommend.saveusertag(uid, json.dumps(alltags, ensure_ascii=False))
+        sortedlist = sorted(alltags.items(), key=lambda item:item[1], reverse=True)
+        recommend.saveusertag(uid, json.dumps(sortedlist[:1000], ensure_ascii=False))
         return utils.returnjson('Update user tags complete.')
     else:
         return utils.returnerror('Need uid and rowkey params.')
@@ -59,6 +59,3 @@ def checksecretkey():
         return utils.returnerror('API Forbidden.'), 403
     
 app.run(host=config['host'], port=config['port'])
-
-# finally part.
-db.closeconn()
